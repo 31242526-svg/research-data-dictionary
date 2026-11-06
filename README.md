@@ -1,6 +1,7 @@
 # research-data-dictionary
 
 [![CI](https://github.com/31242526-svg/research-data-dictionary/actions/workflows/ci.yml/badge.svg)](https://github.com/31242526-svg/research-data-dictionary/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/31242526-svg/research-data-dictionary?label=release)](https://github.com/31242526-svg/research-data-dictionary/releases)
 
 Turn a CSV or Excel file into a data dictionary your methods section can cite.
 
