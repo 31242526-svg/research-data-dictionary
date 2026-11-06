@@ -71,6 +71,18 @@ def test_text_statistics_include_lengths_and_examples():
         assert "short note" in column.stats["examples"]
 
 
+def test_markdown_title_falls_back_to_the_file_name():
+    profile = profile_frame(pd.DataFrame({"x": [1]}), source="raw_v3_final.csv")
+    assert "# Data dictionary: raw_v3_final.csv" in profile.to_markdown()
+
+
+def test_markdown_title_can_be_overridden_without_touching_json():
+    profile = profile_frame(pd.DataFrame({"x": [1]}), source="raw_v3_final.csv")
+    markdown = profile.to_markdown(title="Survey 2024, wave 2")
+    assert "# Data dictionary: Survey 2024, wave 2" in markdown
+    assert profile.to_dict()["source"] == "raw_v3_final.csv"
+
+
 def test_excel_matches_the_csv_profile(tmp_path):
     frame = pd.read_csv(EXAMPLES / "participants.csv")
     workbook = tmp_path / "participants.xlsx"

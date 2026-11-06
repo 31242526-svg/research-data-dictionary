@@ -29,6 +29,12 @@ pip install -e ".[parquet]"
 ddict measurements.parquet -o dictionary.md
 ```
 
+Name the dictionary after the study rather than the file:
+
+```bash
+ddict participants.csv --title "Survey 2024, wave 2" -o dictionary.md
+```
+
 ```
 dictionary.md written: 7 rows, 6 columns
 dictionary.json written

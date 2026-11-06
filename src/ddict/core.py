@@ -42,9 +42,10 @@ class DatasetProfile:
             "column_profiles": [asdict(c) for c in self.column_profiles],
         }
 
-    def to_markdown(self) -> str:
+    def to_markdown(self, title: str | None = None) -> str:
+        heading = title or self.source
         lines = [
-            f"# Data dictionary: {self.source}",
+            f"# Data dictionary: {heading}",
             "",
             f"{self.rows} rows x {self.columns} columns - "
             f"{self.duplicate_rows} duplicate row(s)",
