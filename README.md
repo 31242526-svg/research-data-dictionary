@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/31242526-svg/research-data-dictionary/actions/workflows/ci.yml/badge.svg)](https://github.com/31242526-svg/research-data-dictionary/actions/workflows/ci.yml)
 
-Turn a CSV into a data dictionary your methods section can cite.
+Turn a CSV or Excel file into a data dictionary your methods section can cite.
 
 Most datasets arrive without one. Then a reviewer asks "what is `score`, and why are 14% of
 `age` missing?" — and someone rebuilds the table by hand. This tool produces it from the
@@ -13,6 +13,13 @@ file itself: inferred types, missingness, ranges, top categories and example val
 ```bash
 pip install -e ".[dev]"
 ddict examples/participants.csv -o dictionary.md --json dictionary.json
+```
+
+Excel files work too — install the extra once:
+
+```bash
+pip install -e ".[excel]"
+ddict participants.xlsx -o dictionary.md
 ```
 
 ```
@@ -55,7 +62,7 @@ dictionary.json written
 | --- | --- |
 | `empty` | every value is missing |
 | `integer` / `float` | numeric dtype, or text where at least 90% parses as numbers |
-| `datetime` | at least 90% of non-null values parse as dates |
+| `datetime` | at least 90% of non-null values parse as dates, or real date cells from Excel |
 | `categorical` | text with at most 20 distinct values and at most 50% distinct |
 | `text` | everything else |
 
@@ -65,7 +72,9 @@ silently losing values.
 
 ## Limitations
 
-- CSV only. Excel and Parquet are not read yet.
+- `.xlsx` and `.xlsm` input needs the `excel` extra (`openpyxl`); legacy `.xls` also needs
+  `xlrd`.
+- Parquet, SPSS and Stata files are not read yet.
 - No semantic typing: a column of years is `integer`, not `year`.
 - Inference is heuristic. Check the table before quoting it in a paper; the JSON output is
   there so you can diff versions of a dataset as it changes.

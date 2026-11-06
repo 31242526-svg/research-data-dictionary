@@ -14,7 +14,7 @@ def build_parser() -> argparse.ArgumentParser:
         prog="ddict",
         description="Build a data dictionary (Markdown or JSON) from a CSV file.",
     )
-    parser.add_argument("source", type=Path, help="input CSV")
+    parser.add_argument("source", type=Path, help="input CSV or Excel (.xlsx) file")
     parser.add_argument("-o", "--output", type=Path, default=None, help="Markdown output file")
     parser.add_argument("--json", type=Path, default=None, help="JSON output file")
     return parser
@@ -26,7 +26,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: no such file: {args.source}", file=sys.stderr)
         return 2
 
-    profile = profile_file(args.source)
+    try:
+        profile = profile_file(args.source)
+    except (ValueError, RuntimeError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
     markdown = profile.to_markdown()
 
     if args.output:
