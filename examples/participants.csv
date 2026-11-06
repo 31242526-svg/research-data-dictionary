@@ -1,0 +1,8 @@
+participant_id,age,score,city,joined,notes
+1,21,88.5,Pune,2024-01-12,baseline
+2,22,91.0,Pune,2024-01-15,
+3,,76.5,Mumbai,2024-02-01,follow-up needed
+4,45,64.0,Nashik,2024-02-10,outlier in age
+5,23,88.5,Pune,2024-03-03,
+2,22,91.0,Pune,2024-01-15,
+6,24,79.0,Mumbai,2024-03-21,complete
