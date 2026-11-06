@@ -9,4 +9,5 @@ dist/
 .ruff_cache/
 dictionary.md
 dictionary.json
+*.xlsx
 .DS_Store

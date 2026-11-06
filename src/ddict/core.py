@@ -78,6 +78,8 @@ def infer_type(series: pd.Series) -> str:
     if pd.api.types.is_numeric_dtype(series):
         values = non_null.astype("float64")
         return "integer" if (values % 1 == 0).all() else "float"
+    if pd.api.types.is_datetime64_any_dtype(series):
+        return "datetime"
     if _is_text(series):
         cleaned = non_null.astype("string").str.replace(",", "", regex=False).str.strip()
         numbers = pd.to_numeric(cleaned, errors="coerce")
@@ -176,7 +178,18 @@ def profile_frame(df: pd.DataFrame, source: str = "<dataframe>") -> DatasetProfi
 
 
 def profile_file(path: str | Path) -> DatasetProfile:
-    """Read a CSV and profile it."""
+    """Read a CSV or Excel file and profile it."""
     path = Path(path)
-    df = pd.read_csv(path)
+    suffix = path.suffix.lower()
+    if suffix == ".csv":
+        df = pd.read_csv(path)
+    elif suffix in {".xlsx", ".xlsm", ".xls"}:
+        try:
+            df = pd.read_excel(path)
+        except ImportError as exc:
+            raise RuntimeError(
+                'Excel support needs openpyxl: pip install "research-data-dictionary[excel]"'
+            ) from exc
+    else:
+        raise ValueError(f"unsupported file type: {path.suffix or '<none>'} (use .csv or .xlsx)")
     return profile_frame(df, source=path.name)

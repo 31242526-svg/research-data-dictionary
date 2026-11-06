@@ -1,9 +1,13 @@
 import json
+from pathlib import Path
 
 import pandas as pd
+import pytest
 
-from ddict import profile_frame
+from ddict import profile_file, profile_frame
 from ddict.core import infer_type
+
+EXAMPLES = Path(__file__).resolve().parents[1] / "examples"
 
 
 def test_integer_and_float_detection():
@@ -65,3 +69,33 @@ def test_text_statistics_include_lengths_and_examples():
     if column.type == "text":
         assert column.stats["min_length"] == 10
         assert "short note" in column.stats["examples"]
+
+
+def test_excel_matches_the_csv_profile(tmp_path):
+    frame = pd.read_csv(EXAMPLES / "participants.csv")
+    workbook = tmp_path / "participants.xlsx"
+    frame.to_excel(workbook, index=False)
+
+    from_csv = profile_file(EXAMPLES / "participants.csv")
+    from_xlsx = profile_file(workbook)
+
+    assert from_xlsx.rows == from_csv.rows
+    assert from_xlsx.duplicate_rows == from_csv.duplicate_rows
+    assert [c.type for c in from_xlsx.column_profiles] == [
+        c.type for c in from_csv.column_profiles
+    ]
+
+
+def test_real_excel_dates_are_detected(tmp_path):
+    frame = pd.DataFrame({"when": pd.to_datetime(["2024-01-01", "2024-02-01", "2024-03-01"])})
+    workbook = tmp_path / "dates.xlsx"
+    frame.to_excel(workbook, index=False)
+
+    assert profile_file(workbook).column_profiles[0].type == "datetime"
+
+
+def test_unsupported_file_type_is_rejected(tmp_path):
+    path = tmp_path / "notes.txt"
+    path.write_text("a,b\n1,2\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="unsupported file type"):
+        profile_file(path)
