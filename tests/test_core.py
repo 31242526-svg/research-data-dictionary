@@ -99,3 +99,18 @@ def test_unsupported_file_type_is_rejected(tmp_path):
     path.write_text("a,b\n1,2\n", encoding="utf-8")
     with pytest.raises(ValueError, match="unsupported file type"):
         profile_file(path)
+
+
+def test_parquet_matches_the_csv_profile(tmp_path):
+    frame = pd.read_csv(EXAMPLES / "participants.csv")
+    path = tmp_path / "participants.parquet"
+    frame.to_parquet(path)
+
+    from_csv = profile_file(EXAMPLES / "participants.csv")
+    from_parquet = profile_file(path)
+
+    assert from_parquet.rows == from_csv.rows
+    assert from_parquet.duplicate_rows == from_csv.duplicate_rows
+    assert [c.type for c in from_parquet.column_profiles] == [
+        c.type for c in from_csv.column_profiles
+    ]
