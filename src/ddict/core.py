@@ -190,6 +190,15 @@ def profile_file(path: str | Path) -> DatasetProfile:
             raise RuntimeError(
                 'Excel support needs openpyxl: pip install "research-data-dictionary[excel]"'
             ) from exc
+    elif suffix == ".parquet":
+        try:
+            df = pd.read_parquet(path)
+        except ImportError as exc:
+            raise RuntimeError(
+                'Parquet support needs pyarrow: pip install "research-data-dictionary[parquet]"'
+            ) from exc
     else:
-        raise ValueError(f"unsupported file type: {path.suffix or '<none>'} (use .csv or .xlsx)")
+        raise ValueError(
+            f"unsupported file type: {path.suffix or '<none>'} (use .csv, .xlsx or .parquet)"
+        )
     return profile_frame(df, source=path.name)

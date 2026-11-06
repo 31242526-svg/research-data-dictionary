@@ -10,4 +10,5 @@ dist/
 dictionary.md
 dictionary.json
 *.xlsx
+*.parquet
 .DS_Store

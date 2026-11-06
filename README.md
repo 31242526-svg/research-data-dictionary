@@ -22,6 +22,13 @@ pip install -e ".[excel]"
 ddict participants.xlsx -o dictionary.md
 ```
 
+Parquet works the same way:
+
+```bash
+pip install -e ".[parquet]"
+ddict measurements.parquet -o dictionary.md
+```
+
 ```
 dictionary.md written: 7 rows, 6 columns
 dictionary.json written
@@ -74,7 +81,7 @@ silently losing values.
 
 - `.xlsx` and `.xlsm` input needs the `excel` extra (`openpyxl`); legacy `.xls` also needs
   `xlrd`.
-- Parquet, SPSS and Stata files are not read yet.
+- SPSS and Stata files are not read yet.
 - No semantic typing: a column of years is `integer`, not `year`.
 - Inference is heuristic. Check the table before quoting it in a paper; the JSON output is
   there so you can diff versions of a dataset as it changes.
