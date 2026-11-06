@@ -99,4 +99,4 @@ silently losing values.
 pytest
 ```
 
-MIT licensed.
+MIT licensed. See [CHANGELOG.md](CHANGELOG.md) for the release history.

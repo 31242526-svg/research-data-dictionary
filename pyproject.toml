@@ -1,6 +1,6 @@
 [project]
 name = "research-data-dictionary"
-version = "0.1.0"
+version = "0.2.0"
 description = "Turn a CSV or Excel file into a data dictionary: column types, missingness, ranges and example values."
 readme = "README.md"
 requires-python = ">=3.10"
